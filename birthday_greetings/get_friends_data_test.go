@@ -5,26 +5,39 @@ import (
 	"testing"
 )
 
-func TestGetFriendsDataReturnType(t *testing.T) {
+func TestBuildFriendsWithoutData(t *testing.T) {
 	data := ""
-	got := BuildFriends(data)
-	want := reflect.TypeOf([]Friend{})
+	_, err := BuildFriends(data)
 
-	if reflect.TypeOf(got) != want {
-		t.Errorf("Return value should be a slice of friends")
+	if err == nil {
+		t.Errorf("Expected error to be raised but was not")
 	}
 }
 
-func TestBuildFriendsWithoutData(t *testing.T) {
-	data := ""
-	got := BuildFriends(data)
-	want := []Friend{}
+func TestBuildFriendsWithSingleFriendData(t *testing.T) {
+	data := "Doe,John,1982/10/08,john.doe@example.com"
+	got, err := BuildFriends(data)
+	want := []Friend{{FirstName: "John", LastName: "Doe", BirthDate: "1982/10/08", Email: "john.doe@example.com"}}
 
-	if len(got) != len(want) {
-		t.Errorf("Expected %d friends, got %d", len(want), len(got))
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
 	}
 
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Expected %v, got %v", want, got)
+		t.Errorf("Expected %v but got %v", want, got)
+	}
+}
+
+func TestBuildFriendsWithDifferentSingleFriendData(t *testing.T) {
+	data := "Smith,Jane,1990/05/15,jane.smith@example.com"
+	got, err := BuildFriends(data)
+	want := []Friend{{FirstName: "Jane", LastName: "Smith", BirthDate: "1990/05/15", Email: "jane.smith@example.com"}}
+
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Expected %v but got %v", want, got)
 	}
 }
