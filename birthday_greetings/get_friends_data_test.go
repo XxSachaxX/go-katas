@@ -151,3 +151,29 @@ func TestSendBirthdayGreetings(t *testing.T) {
 		t.Errorf("Expected no error but got '%v'", err.Error())
 	}
 }
+
+func TestSendBirthdayGreetingsWithoutTitle(t *testing.T) {
+	birthdayGreetings := BirthdayGreetings{title: "", message: "Happy birthday, dear Jane Doe!"}
+	err := birthdayGreetings.Send()
+
+	if err == nil {
+		t.Errorf("Expected error to be raised but was not")
+	}
+
+	if err.Error() != "title is empty" {
+		t.Errorf("Expected error message to be 'title is empty' but got '%v'", err.Error())
+	}
+}
+
+func TestSendBirthdayGreetingsWithoutMessage(t *testing.T) {
+	birthdayGreetings := BirthdayGreetings{title: "Happy Birthday", message: ""}
+	err := birthdayGreetings.Send()
+
+	if err == nil {
+		t.Errorf("Expected error to be raised but was not")
+	}
+
+	if err.Error() != "message is empty" {
+		t.Errorf("Expected error message to be 'message is empty' but got '%v'", err.Error())
+	}
+}

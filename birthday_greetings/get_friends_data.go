@@ -53,6 +53,14 @@ func (friend Friend) BuildBirthdayMessage() (BirthdayGreetings, error) {
 }
 
 func (greetings BirthdayGreetings) Send() error {
+	if greetings.title == "" {
+		return errors.New("title is empty")
+	}
+
+	if greetings.message == "" {
+		return errors.New("message is empty")
+	}
+
 	return nil
 }
 
