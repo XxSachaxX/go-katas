@@ -29,22 +29,30 @@ func BuildFriends(data string) ([]Friend, error) {
 	return friends, nil
 }
 
-func (friend Friend) BuildBirthdayMessage() (string, error) {
+func (friend Friend) BuildBirthdayMessage() (BirthdayGreetings, error) {
 	if friend.BirthDate == "" {
-		return "", errors.New("birth date is empty")
+		return BirthdayGreetings{}, errors.New("birth date is empty")
 	}
 
 	if friend.Email == "" {
-		return "", errors.New("email is empty")
+		return BirthdayGreetings{}, errors.New("email is empty")
 	}
 
 	if friend.FirstName == "" {
-		return "", errors.New("first name is empty")
+		return BirthdayGreetings{}, errors.New("first name is empty")
 	}
 
 	if friend.LastName == "" {
-		return "", errors.New("last name is empty")
+		return BirthdayGreetings{}, errors.New("last name is empty")
 	}
 
-	return fmt.Sprintf("Happy birthday, dear %s %s!", friend.FirstName, friend.LastName), nil
+	return BirthdayGreetings{
+		title: "Happy Birthday",
+		message: fmt.Sprintf("Happy birthday, dear %s %s!", friend.FirstName, friend.LastName),
+	}, nil
+}
+
+type BirthdayGreetings struct {
+	title string
+	message string
 }

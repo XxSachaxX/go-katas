@@ -129,13 +129,16 @@ func TestBuildBirthdayMessageWithAFriendWithAllData(t *testing.T) {
 	friend := Friend{FirstName: "Jane", LastName: "Doe", BirthDate: "1990/05/15", Email: "jane.smith@example.com"}
 
 	got, err := friend.BuildBirthdayMessage()
-	want := "Happy birthday, dear Jane Doe!"
+	want := BirthdayGreetings{
+		title: "Happy Birthday",
+		message: "Happy birthday, dear Jane Doe!",
+	}
 
 	if err != nil {
 		t.Errorf("Expected no error but got '%v'", err.Error())
 	}
 
-	if got != want {
+	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Expected '%v' but got '%v'", want, got)
 	}
 }
