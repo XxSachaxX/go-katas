@@ -142,3 +142,12 @@ func TestBuildBirthdayMessageWithAFriendWithAllData(t *testing.T) {
 		t.Errorf("Expected '%v' but got '%v'", want, got)
 	}
 }
+
+func TestSendBirthdayGreetings(t *testing.T) {
+	birthdayGreetings := BirthdayGreetings{title: "Happy Birthday", message: "Happy birthday, dear Jane Doe!"}
+	err := birthdayGreetings.Send()
+
+	if err != nil {
+		t.Errorf("Expected no error but got '%v'", err.Error())
+	}
+}

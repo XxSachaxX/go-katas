@@ -52,6 +52,10 @@ func (friend Friend) BuildBirthdayMessage() (BirthdayGreetings, error) {
 	}, nil
 }
 
+func (greetings BirthdayGreetings) Send() error {
+	return nil
+}
+
 type BirthdayGreetings struct {
 	title string
 	message string
