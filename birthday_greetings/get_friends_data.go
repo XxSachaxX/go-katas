@@ -1,8 +1,10 @@
 package birthday_greetings
 
 import (
+	"encoding/csv"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -11,22 +13,6 @@ type Friend struct {
 	FirstName string
 	BirthDate string
 	Email string
-}
-
-func BuildFriends(data string) ([]Friend, error) {
-	if data == "" {
-		return []Friend{}, errors.New("data is empty")
-	}
-
-	friendsData := strings.Split(data, "\n")
-	friends := []Friend{}
-	for _, friend := range friendsData {
-		parts := strings.Split(friend, ",")
-		lastName, firstName, birthDate, email := parts[0], parts[1], parts[2], parts[3]
-		friends = append(friends, Friend{LastName: lastName, FirstName: firstName, BirthDate: birthDate, Email: email})
-	}
-
-	return friends, nil
 }
 
 func (friend Friend) BuildBirthdayMessage() (BirthdayGreetings, error) {
@@ -67,4 +53,43 @@ func (greetings BirthdayGreetings) Send() error {
 type BirthdayGreetings struct {
 	title string
 	message string
+}
+
+type FriendsRepository interface {
+	GetFriends() ([]Friend, error)
+}
+
+type TextFileFriendsRepository struct {
+	path string
+}
+
+func (repo TextFileFriendsRepository) GetFriends() ([]Friend, error) {
+	data, err := os.Open(repo.path)
+	if err != nil {
+		return nil, err
+	}
+
+	defer data.Close()
+
+	csv := csv.NewReader(data)
+	csv.TrimLeadingSpace = true
+	csv.FieldsPerRecord = 4
+
+	rows, err := csv.ReadAll()
+		if err != nil {
+			return nil, err
+		}
+
+	friends := make([]Friend, 0, len(rows))
+
+	for _, rec := range rows {
+			friends = append(friends, Friend{
+				LastName:  strings.TrimSpace(rec[0]),
+				FirstName: strings.TrimSpace(rec[1]),
+				BirthDate: strings.TrimSpace(rec[2]),
+				Email:     strings.TrimSpace(rec[3]),
+			})
+		}
+
+	return friends, nil
 }
