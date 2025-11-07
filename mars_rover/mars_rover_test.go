@@ -134,3 +134,55 @@ func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
 		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
 	}
 }
+
+func TestPositionObstacleOnMapWithNegativeX(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetObstaclePosition(createdMap, 0, 1)
+
+
+	if err == nil {
+		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
+	}
+}
+
+func TestPositionObstacleOnMapWithNegativeY(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetObstaclePosition(createdMap, 1, 0)
+
+
+	if err == nil {
+		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
+	}
+}
+
+func TestPositionObstacleOnMapWithOutOfBoundsX(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetObstaclePosition(createdMap, 3, 1)
+
+	if err == nil {
+		t.Errorf("SetObstaclePosition(3, 1) should return an error")
+	}
+}
+
+func TestPositionObstacleOnMapWithOutOfBoundsY(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetObstaclePosition(createdMap, 1, 3)
+
+	if err == nil {
+		t.Errorf("SetObstaclePosition(1, 3) should return an error")
+	}
+}
+
+func TestPositionObstacleWithValidCoordinates(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetObstaclePosition(createdMap, 1, 1)
+	expectedMap := []string{"O-", "--"}
+
+	if err != nil {
+		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
+	}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
