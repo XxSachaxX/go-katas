@@ -70,3 +70,53 @@ func TestMakeMapWithNegativeHeight(t *testing.T) {
 		t.Errorf("Should not allow negative height")
 	}
 }
+
+func TestSetPositionWithNegativeX(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, -1, 1)
+
+	if err == nil {
+		t.Errorf("Should not allow negative x position")
+	}
+}
+
+func TestSetRoverPositionWithNegativeY(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, 1, -1)
+
+	if err == nil {
+		t.Errorf("Should not allow negative y position")
+	}
+}
+
+func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, 3, 1)
+
+	if err == nil {
+		t.Errorf("Should not allow x position out of bounds")
+	}
+}
+
+func TestRoverPositionWithOutOfBoundsY(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, 1, 3)
+
+	if err == nil {
+		t.Errorf("Should not allow y position out of bounds")
+	}
+}
+
+func TestRoverPositionWithValidCoordinates(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, 1, 1)
+	expectedMap := []string{"X-", "--"}
+
+	if err != nil {
+		t.Errorf("SetRoverPosition(1, 1) returned error: %v", err)
+	}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}

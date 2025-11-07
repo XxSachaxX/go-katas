@@ -27,5 +27,14 @@ func SetRoverPosition(mapRows []string, x, y int) error {
 		return errors.New("negative coordinates are not allowed")
 	}
 
+	if x >= len(mapRows[0]) || y >= len(mapRows) {
+		return errors.New("coordinates out of bounds")
+	}
+
+	row := mapRows[y - 1]
+	runes := []rune(row)
+	runes[x - 1] = 'X'
+	mapRows[y - 1] = string(runes)
+
 	return nil
 }
