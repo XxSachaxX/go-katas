@@ -15,6 +15,19 @@ type Friend struct {
 	Email string
 }
 
+type BirthdayGreetings struct {
+	title string
+	message string
+}
+
+type FriendsRepository interface {
+	GetFriends() ([]Friend, error)
+}
+
+type TextFileFriendsRepository struct {
+	path string
+}
+
 func (friend Friend) BuildBirthdayMessage() (BirthdayGreetings, error) {
 	if friend.BirthDate == "" {
 		return BirthdayGreetings{}, errors.New("birth date is empty")
@@ -48,19 +61,6 @@ func (greetings BirthdayGreetings) Send() error {
 	}
 
 	return nil
-}
-
-type BirthdayGreetings struct {
-	title string
-	message string
-}
-
-type FriendsRepository interface {
-	GetFriends() ([]Friend, error)
-}
-
-type TextFileFriendsRepository struct {
-	path string
 }
 
 func (repo TextFileFriendsRepository) GetFriends() ([]Friend, error) {

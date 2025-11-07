@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestBuildFriendsWithInvalidFilePath(t *testing.T) {
+func TestGetFriendsFromTextFileWithInvalidFilePath(t *testing.T) {
 	path := "invalid.txt"
 	repository := TextFileFriendsRepository{path: path}
 	_, err := repository.GetFriends()
