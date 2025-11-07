@@ -23,23 +23,14 @@ func MakeMap(width, height int) ([]string, error) {
 }
 
 func SetRoverPosition(mapRows []string, x, y int) error {
-	if x <= 0 || y <= 0 {
-		return errors.New("negative coordinates are not allowed")
-	}
-
-	if x > len(mapRows[0]) || y > len(mapRows) {
-		return errors.New("coordinates out of bounds")
-	}
-
-	row := mapRows[y - 1]
-	runes := []rune(row)
-	runes[x - 1] = 'X'
-	mapRows[y - 1] = string(runes)
-
-	return nil
+	return setPosition(mapRows, x, y, 'X')
 }
 
 func SetObstaclePosition(mapRows []string, x, y int) error {
+	return setPosition(mapRows, x, y, 'O')
+}
+
+func setPosition(mapRows []string, x, y int, symbol rune) error {
 	if x <= 0 || y <= 0 {
 		return errors.New("negative coordinates are not allowed")
 	}
@@ -50,7 +41,7 @@ func SetObstaclePosition(mapRows []string, x, y int) error {
 
 	row := mapRows[y - 1]
 	runes := []rune(row)
-	runes[x - 1] = 'O'
+	runes[x - 1] = symbol
 	mapRows[y - 1] = string(runes)
 
 	return nil
