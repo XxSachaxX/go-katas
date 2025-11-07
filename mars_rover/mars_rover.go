@@ -5,6 +5,20 @@ import (
 	"strings"
 )
 
+type Rover struct {
+	x int
+	y int
+	direction string
+}
+
+func NewRover(x, y int, direction string) (Rover) {
+	return Rover {
+		x: x,
+		y: y,
+		direction: direction,
+	}
+}
+
 func MakeMap(width, height int) ([]string, error) {
 	if width <=0 {
 		return nil, errors.New("invalid width: cannot be zero or negative")
@@ -22,8 +36,12 @@ func MakeMap(width, height int) ([]string, error) {
 	return mapRows, nil
 }
 
-func SetRoverPosition(mapRows []string, x, y int) error {
-	return setPosition(mapRows, x, y, 'X')
+func SetRoverPosition(mapRows []string, x, y int, direction rune) error {
+	if !isValidDirection(string(direction)) {
+		return errors.New("invalid direction")
+	}
+
+	return setPosition(mapRows, x, y, direction)
 }
 
 func SetObstaclePosition(mapRows []string, x, y int) error {
@@ -45,4 +63,11 @@ func setPosition(mapRows []string, x, y int, symbol rune) error {
 	mapRows[y - 1] = string(runes)
 
 	return nil
+}
+
+func isValidDirection(direction string) bool {
+	if direction == "N" || direction == "S" || direction == "E" || direction == "W" {
+		return true
+	}
+	return false
 }

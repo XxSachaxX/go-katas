@@ -73,7 +73,7 @@ func TestMakeMapWithNegativeHeight(t *testing.T) {
 
 func TestSetPositionWithNegativeX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, -1, 1)
+	err := SetRoverPosition(createdMap, -1, 1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow negative x position")
@@ -82,7 +82,7 @@ func TestSetPositionWithNegativeX(t *testing.T) {
 
 func TestSetRoverPositionWithNegativeY(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, -1)
+	err := SetRoverPosition(createdMap, 1, -1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow negative y position")
@@ -91,7 +91,7 @@ func TestSetRoverPositionWithNegativeY(t *testing.T) {
 
 func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 3, 1)
+	err := SetRoverPosition(createdMap, 3, 1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow x position out of bounds")
@@ -100,17 +100,26 @@ func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
 
 func TestRoverPositionWithOutOfBoundsY(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, 3)
+	err := SetRoverPosition(createdMap, 1, 3, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow y position out of bounds")
 	}
 }
 
+func TestRoverPositionWithInvalidDirection(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	err := SetRoverPosition(createdMap, 1, 1, 'X')
+
+	if err == nil {
+		t.Errorf("Should not allow invalid direction")
+	}
+}
+
 func TestRoverPositionWithValidCoordinates(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, 1)
-	expectedMap := []string{"X-", "--"}
+	err := SetRoverPosition(createdMap, 1, 1, 'N')
+	expectedMap := []string{"N-", "--"}
 
 	if err != nil {
 		t.Errorf("SetRoverPosition(1, 1) returned error: %v", err)
@@ -123,8 +132,8 @@ func TestRoverPositionWithValidCoordinates(t *testing.T) {
 
 func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
 	createdMap, _ := MakeMap(10,5)
-	err := SetRoverPosition(createdMap, 5, 5)
-	expectedMap := []string{"----------", "----------","----------","----------","----X-----"}
+	err := SetRoverPosition(createdMap, 5, 5, 'N')
+	expectedMap := []string{"----------", "----------","----------","----------","----N-----"}
 
 	if err != nil {
 		t.Errorf("SetRoverPosition(5, 5) returned error: %v", err)
