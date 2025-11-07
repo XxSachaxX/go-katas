@@ -71,9 +71,10 @@ func TestMakeMapWithNegativeHeight(t *testing.T) {
 	}
 }
 
-func TestSetPositionWithNegativeX(t *testing.T) {
+func TestSetRoverPositionWithNegativeX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, -1, 1, 'N')
+	rover, _ := NewRover(-1, 1, 'N')
+	err := rover.SetPosition(createdMap, -1, 1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow negative x position")
@@ -82,7 +83,8 @@ func TestSetPositionWithNegativeX(t *testing.T) {
 
 func TestSetRoverPositionWithNegativeY(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, -1, 'N')
+	rover, _ := NewRover(1, -1, 'N')
+	err := rover.SetPosition(createdMap, 1, -1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow negative y position")
@@ -91,7 +93,8 @@ func TestSetRoverPositionWithNegativeY(t *testing.T) {
 
 func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 3, 1, 'N')
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.SetPosition(createdMap, 3, 1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow x position out of bounds")
@@ -100,16 +103,16 @@ func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
 
 func TestRoverPositionWithOutOfBoundsY(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, 3, 'N')
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.SetPosition(createdMap, 1, 3, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow y position out of bounds")
 	}
 }
 
-func TestRoverPositionWithInvalidDirection(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, 1, 'X')
+func TestRoverCreationWithInvalidDirection(t *testing.T) {
+	_, err := NewRover(1, 1, 'X')
 
 	if err == nil {
 		t.Errorf("Should not allow invalid direction")
@@ -118,7 +121,8 @@ func TestRoverPositionWithInvalidDirection(t *testing.T) {
 
 func TestRoverPositionWithValidCoordinates(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetRoverPosition(createdMap, 1, 1, 'N')
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.SetPosition(createdMap, 1, 1, 'N')
 	expectedMap := []string{"N-", "--"}
 
 	if err != nil {
@@ -132,7 +136,8 @@ func TestRoverPositionWithValidCoordinates(t *testing.T) {
 
 func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
 	createdMap, _ := MakeMap(10,5)
-	err := SetRoverPosition(createdMap, 5, 5, 'N')
+	rover, _ := NewRover(5, 5, 'N')
+	err := rover.SetPosition(createdMap, 5, 5, 'N')
 	expectedMap := []string{"----------", "----------","----------","----------","----N-----"}
 
 	if err != nil {
@@ -144,29 +149,26 @@ func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
 	}
 }
 
-func TestPositionObstacleOnMapWithNegativeX(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	err := SetObstaclePosition(createdMap, 0, 1)
-
+func TestCreateObstacleWithNegativeX(t *testing.T) {
+	_, err := NewObstacle(0, 1)
 
 	if err == nil {
-		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
+		t.Errorf("Expected error, got nil")
 	}
 }
 
-func TestPositionObstacleOnMapWithNegativeY(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	err := SetObstaclePosition(createdMap, 1, 0)
-
+func TestCreateObstacleWithNegativeY(t *testing.T) {
+	_, err := NewObstacle(1, 0)
 
 	if err == nil {
-		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
+		t.Errorf("Expected error, got nil")
 	}
 }
 
 func TestPositionObstacleOnMapWithOutOfBoundsX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetObstaclePosition(createdMap, 3, 1)
+	obstacle, _ := NewObstacle(3, 1)
+	err := obstacle.SetPosition(createdMap, 3, 1, 'O')
 
 	if err == nil {
 		t.Errorf("SetObstaclePosition(3, 1) should return an error")
@@ -175,7 +177,8 @@ func TestPositionObstacleOnMapWithOutOfBoundsX(t *testing.T) {
 
 func TestPositionObstacleOnMapWithOutOfBoundsY(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetObstaclePosition(createdMap, 1, 3)
+	obstacle, _ := NewObstacle(1, 3)
+	err := obstacle.SetPosition(createdMap, 1, 3, 'O')
 
 	if err == nil {
 		t.Errorf("SetObstaclePosition(1, 3) should return an error")
@@ -184,7 +187,8 @@ func TestPositionObstacleOnMapWithOutOfBoundsY(t *testing.T) {
 
 func TestPositionObstacleWithValidCoordinates(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
-	err := SetObstaclePosition(createdMap, 1, 1)
+	obstacle, _ := NewObstacle(1, 1)
+	err := obstacle.SetPosition(createdMap, 1, 1, 'O')
 	expectedMap := []string{"O-", "--"}
 
 	if err != nil {

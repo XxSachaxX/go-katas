@@ -5,18 +5,80 @@ import (
 	"strings"
 )
 
+type Positionnable interface {
+	SetPosition(mapRows []string, x, y int, symbol rune) error
+}
+
+type Obstacle struct {
+	x int
+	y int
+}
+
+func NewObstacle(x, y int) (Obstacle, error) {
+	if x <= 0 || y <= 0 {
+		return Obstacle{}, errors.New("invalid coordinates")
+	}
+
+	return Obstacle {
+		x: x,
+		y: y,
+	}, nil
+}
+
+func (obstacle Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) error {
+	if x > len(mapRows[0]) || y > len(mapRows) {
+		return errors.New("coordinates out of bounds")
+	}
+
+	row := mapRows[y - 1]
+	runes := []rune(row)
+	runes[x - 1] = symbol
+	mapRows[y - 1] = string(runes)
+
+	return nil
+}
+
 type Rover struct {
 	x int
 	y int
-	direction string
+	direction rune
 }
 
-func NewRover(x, y int, direction string) (Rover) {
+func NewRover(x, y int, direction rune) (Rover, error) {
+
+	if !isValidDirection(direction) {
+		return Rover{}, errors.New("invalid direction")
+	}
+
 	return Rover {
 		x: x,
 		y: y,
 		direction: direction,
+	}, nil
+}
+
+func isValidDirection(direction rune) bool {
+	if direction == 'N' || direction == 'S' || direction == 'E' || direction == 'W' {
+		return true
 	}
+	return false
+}
+
+func (r Rover) SetPosition(mapRows []string, x, y int, symbol rune) error {
+	if x <= 0 || y <= 0 {
+		return errors.New("negative coordinates are not allowed")
+	}
+
+	if x > len(mapRows[0]) || y > len(mapRows) {
+		return errors.New("coordinates out of bounds")
+	}
+
+	row := mapRows[y - 1]
+	runes := []rune(row)
+	runes[x - 1] = symbol
+	mapRows[y - 1] = string(runes)
+
+	return nil
 }
 
 func MakeMap(width, height int) ([]string, error) {
@@ -34,40 +96,4 @@ func MakeMap(width, height int) ([]string, error) {
 	}
 
 	return mapRows, nil
-}
-
-func SetRoverPosition(mapRows []string, x, y int, direction rune) error {
-	if !isValidDirection(string(direction)) {
-		return errors.New("invalid direction")
-	}
-
-	return setPosition(mapRows, x, y, direction)
-}
-
-func SetObstaclePosition(mapRows []string, x, y int) error {
-	return setPosition(mapRows, x, y, 'O')
-}
-
-func setPosition(mapRows []string, x, y int, symbol rune) error {
-	if x <= 0 || y <= 0 {
-		return errors.New("negative coordinates are not allowed")
-	}
-
-	if x > len(mapRows[0]) || y > len(mapRows) {
-		return errors.New("coordinates out of bounds")
-	}
-
-	row := mapRows[y - 1]
-	runes := []rune(row)
-	runes[x - 1] = symbol
-	mapRows[y - 1] = string(runes)
-
-	return nil
-}
-
-func isValidDirection(direction string) bool {
-	if direction == "N" || direction == "S" || direction == "E" || direction == "W" {
-		return true
-	}
-	return false
 }
