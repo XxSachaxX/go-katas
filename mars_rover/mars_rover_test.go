@@ -120,3 +120,17 @@ func TestRoverPositionWithValidCoordinates(t *testing.T) {
 		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
 	}
 }
+
+func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
+	createdMap, _ := MakeMap(10,5)
+	err := SetRoverPosition(createdMap, 5, 5)
+	expectedMap := []string{"----------", "----------","----------","----------","----X-----"}
+
+	if err != nil {
+		t.Errorf("SetRoverPosition(5, 5) returned error: %v", err)
+	}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}

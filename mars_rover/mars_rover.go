@@ -27,7 +27,7 @@ func SetRoverPosition(mapRows []string, x, y int) error {
 		return errors.New("negative coordinates are not allowed")
 	}
 
-	if x >= len(mapRows[0]) || y >= len(mapRows) {
+	if x > len(mapRows[0]) || y > len(mapRows) {
 		return errors.New("coordinates out of bounds")
 	}
 
