@@ -94,19 +94,30 @@ func (r Rover) Move(mapRows []string, command string) error {
 		switch r.direction {
 		case 'N':
 			r.direction = 'W'
-			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 		case 'W':
 			r.direction = 'S'
-			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 		case 'S':
 			r.direction = 'E'
-			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 		case 'E':
 			r.direction = 'N'
-			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 		}
 	}
 
+	if command == "turn_right" {
+		switch r.direction {
+		case 'N':
+			r.direction = 'E'
+		case 'E':
+			r.direction = 'S'
+		case 'S':
+			r.direction = 'W'
+		case 'W':
+			r.direction = 'N'
+		}
+
+	}
+
+	r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 	return nil
 }
 

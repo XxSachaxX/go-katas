@@ -175,6 +175,22 @@ func TestTurnRoverPointingNorthToTheLeft(t *testing.T) {
 	}
 }
 
+func TestTurnRoverPointingNorthToTheRight(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.Move(createdMap, "turn_right")
+
+	if err != nil {
+		t.Errorf("TurnRoverLeft() returned error: %v", err)
+	}
+
+	expectedMap := []string{"E-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
 func TestTurnRoverPointingSouthToTheLeft(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
 	rover, _ := NewRover(1, 1, 'S')
@@ -185,6 +201,22 @@ func TestTurnRoverPointingSouthToTheLeft(t *testing.T) {
 	}
 
 	expectedMap := []string{"E-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
+func TestTurnRoverPointingSouthToTheRight(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'S')
+	err := rover.Move(createdMap, "turn_right")
+
+	if err != nil {
+		t.Errorf("TurnRoverRight() returned error: %v", err)
+	}
+
+	expectedMap := []string{"W-", "--"}
 
 	if !reflect.DeepEqual(createdMap, expectedMap) {
 		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
@@ -207,6 +239,22 @@ func TestTurnRoverPointingEastToTheLeft(t *testing.T) {
 	}
 }
 
+func TestTurnRoverPointingEastToTheRight(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'E')
+	err := rover.Move(createdMap, "turn_right")
+
+	if err != nil {
+		t.Errorf("TurnRoverRight() returned error: %v", err)
+	}
+
+	expectedMap := []string{"S-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
 func TestTurnRoverPointingWestToTheLeft(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
 	rover, _ := NewRover(1, 1, 'W')
@@ -217,6 +265,22 @@ func TestTurnRoverPointingWestToTheLeft(t *testing.T) {
 	}
 
 	expectedMap := []string{"S-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
+func TestTurnRoverPointingWestToTheRight(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'W')
+	err := rover.Move(createdMap, "turn_right")
+
+	if err != nil {
+		t.Errorf("TurnRoverRight() returned error: %v", err)
+	}
+
+	expectedMap := []string{"N-", "--"}
 
 	if !reflect.DeepEqual(createdMap, expectedMap) {
 		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
