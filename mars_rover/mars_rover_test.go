@@ -149,6 +149,80 @@ func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
 	}
 }
 
+func TestMoveRoverWithInvalidCommand(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.Move(createdMap, "jump")
+
+	if err == nil {
+		t.Errorf("Expected error, invalid move")
+	}
+}
+
+func TestTurnRoverPointingNorthToTheLeft(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.Move(createdMap, "turn_left")
+
+	if err != nil {
+		t.Errorf("TurnRoverLeft() returned error: %v", err)
+	}
+
+	expectedMap := []string{"W-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
+func TestTurnRoverPointingSouthToTheLeft(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'S')
+	err := rover.Move(createdMap, "turn_left")
+
+	if err != nil {
+		t.Errorf("TurnRoverLeft() returned error: %v", err)
+	}
+
+	expectedMap := []string{"E-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
+func TestTurnRoverPointingEastToTheLeft(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'E')
+	err := rover.Move(createdMap, "turn_left")
+
+	if err != nil {
+		t.Errorf("TurnRoverLeft() returned error: %v", err)
+	}
+
+	expectedMap := []string{"N-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
+func TestTurnRoverPointingWestToTheLeft(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'W')
+	err := rover.Move(createdMap, "turn_left")
+
+	if err != nil {
+		t.Errorf("TurnRoverLeft() returned error: %v", err)
+	}
+
+	expectedMap := []string{"S-", "--"}
+
+	if !reflect.DeepEqual(createdMap, expectedMap) {
+		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	}
+}
+
 func TestCreateObstacleWithNegativeX(t *testing.T) {
 	_, err := NewObstacle(0, 1)
 

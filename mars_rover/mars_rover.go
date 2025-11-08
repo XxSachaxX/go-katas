@@ -5,13 +5,10 @@ import (
 	"strings"
 )
 
-type Positionnable interface {
-	SetPosition(mapRows []string, x, y int, symbol rune) error
-}
-
 type Position struct {
 	x int
 	y int
+	SetPosition func(mapRows []string, x, y int, symbol rune) error
 }
 
 type Obstacle struct {
@@ -86,6 +83,38 @@ func (r Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
 	mapRows[y - 1] = string(runes)
 
 	return nil
+}
+
+func (r Rover) Move(mapRows []string, command string) error {
+	if !r.isValidCommand(command) {
+		return errors.New("invalid command")
+	}
+
+	if command == "turn_left" {
+		switch r.direction {
+		case 'N':
+			r.direction = 'W'
+			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
+		case 'W':
+			r.direction = 'S'
+			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
+		case 'S':
+			r.direction = 'E'
+			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
+		case 'E':
+			r.direction = 'N'
+			r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
+		}
+	}
+
+	return nil
+}
+
+func (r Rover) isValidCommand(command string) bool {
+	if command == "turn_left" || command == "turn_right" || command == "move_forward" {
+		return true
+	}
+	return false
 }
 
 func MakeMap(width, height int) ([]string, error) {
