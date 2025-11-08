@@ -28,7 +28,7 @@ func NewObstacle(x, y int) (Obstacle, error) {
 	}, nil
 }
 
-func (obstacle Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) error {
+func (obstacle *Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) error {
 	if x > len(mapRows[0]) || y > len(mapRows) {
 		return errors.New("coordinates out of bounds")
 	}
@@ -68,7 +68,7 @@ func isValidDirection(direction rune) bool {
 	return false
 }
 
-func (r Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
+func (r *Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
 	if x <= 0 || y <= 0 {
 		return errors.New("negative coordinates are not allowed")
 	}
@@ -91,41 +91,52 @@ func (r Rover) Move(mapRows []string, command string) error {
 	}
 
 	if command == "turn_left" {
-		switch r.direction {
-		case 'N':
-			r.direction = 'W'
-		case 'W':
-			r.direction = 'S'
-		case 'S':
-			r.direction = 'E'
-		case 'E':
-			r.direction = 'N'
-		}
+		r.TurnLeft()
 	}
 
 	if command == "turn_right" {
-		switch r.direction {
-		case 'N':
-			r.direction = 'E'
-		case 'E':
-			r.direction = 'S'
-		case 'S':
-			r.direction = 'W'
-		case 'W':
-			r.direction = 'N'
-		}
-
+		r.TurnRight()
 	}
 
 	r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 	return nil
 }
 
-func (r Rover) isValidCommand(command string) bool {
+func (r *Rover) isValidCommand(command string) bool {
 	if command == "turn_left" || command == "turn_right" || command == "move_forward" {
 		return true
 	}
 	return false
+}
+
+func (r *Rover) TurnLeft() error {
+	switch r.direction {
+	case 'N':
+		r.direction = 'W'
+	case 'W':
+		r.direction = 'S'
+	case 'S':
+		r.direction = 'E'
+	case 'E':
+		r.direction = 'N'
+	}
+
+	return nil
+}
+
+func (r *Rover) TurnRight() error {
+	switch r.direction {
+	case 'N':
+		r.direction = 'E'
+	case 'E':
+		r.direction = 'S'
+	case 'S':
+		r.direction = 'W'
+	case 'W':
+		r.direction = 'N'
+	}
+
+	return nil
 }
 
 func MakeMap(width, height int) ([]string, error) {
