@@ -9,9 +9,13 @@ type Positionnable interface {
 	SetPosition(mapRows []string, x, y int, symbol rune) error
 }
 
-type Obstacle struct {
+type Position struct {
 	x int
 	y int
+}
+
+type Obstacle struct {
+	position Position
 }
 
 func NewObstacle(x, y int) (Obstacle, error) {
@@ -20,8 +24,10 @@ func NewObstacle(x, y int) (Obstacle, error) {
 	}
 
 	return Obstacle {
-		x: x,
-		y: y,
+		position: Position{
+			x: x,
+			y: y,
+		},
 	}, nil
 }
 
@@ -39,8 +45,7 @@ func (obstacle Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) er
 }
 
 type Rover struct {
-	x int
-	y int
+	position Position
 	direction rune
 }
 
@@ -51,8 +56,10 @@ func NewRover(x, y int, direction rune) (Rover, error) {
 	}
 
 	return Rover {
-		x: x,
-		y: y,
+		position: Position{
+			x: x,
+			y: y,
+		},
 		direction: direction,
 	}, nil
 }
@@ -64,7 +71,7 @@ func isValidDirection(direction rune) bool {
 	return false
 }
 
-func (r Rover) SetPosition(mapRows []string, x, y int, symbol rune) error {
+func (r Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
 	if x <= 0 || y <= 0 {
 		return errors.New("negative coordinates are not allowed")
 	}
@@ -75,7 +82,7 @@ func (r Rover) SetPosition(mapRows []string, x, y int, symbol rune) error {
 
 	row := mapRows[y - 1]
 	runes := []rune(row)
-	runes[x - 1] = symbol
+	runes[x - 1] = direction
 	mapRows[y - 1] = string(runes)
 
 	return nil
