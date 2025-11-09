@@ -5,6 +5,29 @@ import (
 	"strings"
 )
 
+type Map struct {
+	rows []string
+	rover *Rover
+	obstacles []*Obstacle
+}
+
+func (m *Map) SetRover(x, y int, direction rune) error {
+	if x <= 0 || y <= 0 {
+		return errors.New("negative coordinates are not allowed")
+	}
+
+	if x > len(m.rows[0]) || y > len(m.rows) {
+		return errors.New("coordinates out of bounds")
+	}
+
+	row := m.rows[y - 1]
+	runes := []rune(row)
+	runes[x - 1] = direction
+	m.rows[y - 1] = string(runes)
+
+	return nil
+}
+
 type Position struct {
 	x int
 	y int
@@ -153,6 +176,7 @@ func (r *Rover) MoveForward(mapRows []string) error {
 			return errors.New("coordinates out of bounds")
 		}
 
+
 		newX := r.position.x
 		newY := r.position.y + 1
 		if mapRows[newY - 1][newX - 1] == 'O' {
@@ -215,4 +239,52 @@ func MakeMap(width, height int) ([]string, error) {
 	}
 
 	return mapRows, nil
+}
+
+func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs ObstaclesConfigs) (*Map, error) {
+	width, height := mapConfig.width, mapConfig.height
+
+	if width <=0 {
+		return nil, errors.New("invalid width: cannot be zero or negative")
+	}
+
+	if height <=0 {
+		return nil, errors.New("invalid height: cannot be zero or negative")
+	}
+
+	mapRows := make([]string, height)
+	for i := range mapRows {
+		mapRows[i] = strings.Repeat("-", width)
+	}
+
+	rover, _ := NewRover(roverConfig.position.x, roverConfig.position.y, roverConfig.direction)
+	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
+	for i, obstacle := range obstacleConfigs.obstacles {
+		obstacles[i] = &Obstacle{position: Position{x: obstacle.position.x, y: obstacle.position.y}}
+	}
+
+	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
+	for _, obstacle := range obstacles {
+		obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, 'O')
+	}
+
+	return &Map{
+		rows: mapRows,
+		rover: &rover,
+		obstacles: obstacles,
+	}, nil
+}
+
+type MapConfig struct {
+	width int
+	height int
+}
+
+type RoverConfig struct {
+	position Position
+	direction rune
+}
+
+type ObstaclesConfigs struct {
+	obstacles []Obstacle
 }

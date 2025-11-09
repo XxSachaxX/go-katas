@@ -71,6 +71,35 @@ func TestMakeMapWithNegativeHeight(t *testing.T) {
 	}
 }
 
+func TestSetRoverOnMapWithValidCoordinates(t *testing.T) {
+	mapConfig := MapConfig{
+		width:  3,
+		height: 3,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	expectedRows := []string{"N--", "-O-", "---"}
+
+	if !reflect.DeepEqual(createdMap.rows, expectedRows) {
+		t.Errorf("Expected rows %v, got %v", expectedRows, createdMap.rows)
+	}
+
+}
+
 func TestSetRoverPositionWithNegativeX(t *testing.T) {
 	createdMap, _ := MakeMap(2,2)
 	rover, _ := NewRover(-1, 1, 'N')
