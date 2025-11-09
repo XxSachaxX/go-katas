@@ -98,6 +98,13 @@ func (r Rover) Move(mapRows []string, command string) error {
 		r.TurnRight()
 	}
 
+	if command == "move_forward" {
+		err := r.MoveForward(mapRows)
+		if err != nil {
+			return err
+		}
+	}
+
 	r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
 	return nil
 }
@@ -134,6 +141,37 @@ func (r *Rover) TurnRight() error {
 		r.direction = 'W'
 	case 'W':
 		r.direction = 'N'
+	}
+
+	return nil
+}
+
+func (r *Rover) MoveForward(mapRows []string) error {
+	switch r.direction {
+	case 'N':
+		if r.position.y + 1 >= len(mapRows) {
+			return errors.New("coordinates out of bounds")
+		} else {
+			r.position.y++
+		}
+	case 'S':
+		if r.position.y - 1 <= 0 {
+			return errors.New("coordinates out of bounds")
+		} else {
+			r.position.y--
+		}
+	case 'E':
+		if r.position.x + 1 >= len(mapRows[0]) {
+			return errors.New("coordinates out of bounds")
+		} else {
+			r.position.x++
+		}
+	case 'W':
+		if r.position.x - 1 <= 0 {
+			return errors.New("coordinates out of bounds")
+		} else {
+			r.position.x--
+		}
 	}
 
 	return nil

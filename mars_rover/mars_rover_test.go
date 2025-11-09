@@ -287,6 +287,28 @@ func TestTurnRoverPointingWestToTheRight(t *testing.T) {
 	}
 }
 
+func TestTryMoveRoverForwardOutOfMapOnXAxis(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'W')
+	err := rover.Move(createdMap, "move_forward")
+
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward out of map")
+	}
+}
+
+func TestTryMoveRoverForwardOutOfMapOnYAxis(t *testing.T) {
+	createdMap, _ := MakeMap(2,1)
+	rover, _ := NewRover(1, 1, 'N')
+	err := rover.Move(createdMap, "move_forward")
+
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward out of map")
+	}
+}
+
+
+
 func TestCreateObstacleWithNegativeX(t *testing.T) {
 	_, err := NewObstacle(0, 1)
 
