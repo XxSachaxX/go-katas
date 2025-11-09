@@ -149,29 +149,52 @@ func (r *Rover) TurnRight() error {
 func (r *Rover) MoveForward(mapRows []string) error {
 	switch r.direction {
 	case 'N':
-		if r.position.y + 1 >= len(mapRows) {
+		if r.position.y + 1 > len(mapRows) {
 			return errors.New("coordinates out of bounds")
-		} else {
-			r.position.y++
 		}
+
+		newX := r.position.x
+		newY := r.position.y + 1
+		if mapRows[newY - 1][newX - 1] == 'O' {
+			return errors.New("obstacle detected")
+		}
+
+		r.position.y++
 	case 'S':
 		if r.position.y - 1 <= 0 {
 			return errors.New("coordinates out of bounds")
-		} else {
-			r.position.y--
 		}
+		newX := r.position.x
+		newY := r.position.y - 1
+		if mapRows[newY - 1][newX - 1] == 'O' {
+			return errors.New("obstacle detected")
+		}
+
+		r.position.y--
 	case 'E':
-		if r.position.x + 1 >= len(mapRows[0]) {
+		if r.position.x + 1 > len(mapRows[0]) {
 			return errors.New("coordinates out of bounds")
-		} else {
-			r.position.x++
 		}
+
+		newX := r.position.x + 1
+		newY := r.position.y
+		if mapRows[newY - 1][newX - 1] == 'O' {
+			return errors.New("obstacle detected")
+		}
+
+		r.position.x++
 	case 'W':
 		if r.position.x - 1 <= 0 {
 			return errors.New("coordinates out of bounds")
-		} else {
-			r.position.x--
 		}
+
+		newX := r.position.x - 1
+		newY := r.position.y
+		if mapRows[newY - 1][newX - 1] == 'O' {
+			return errors.New("obstacle detected")
+		}
+
+		r.position.x--
 	}
 
 	return nil

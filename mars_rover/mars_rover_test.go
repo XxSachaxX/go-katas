@@ -307,7 +307,61 @@ func TestTryMoveRoverForwardOutOfMapOnYAxis(t *testing.T) {
 	}
 }
 
+func TestTryMoveRoverForwardIntoObstacleFromEast(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'E')
+	rover.SetPosition(createdMap, 1, 1, 'E')
 
+	obstacle, _ := NewObstacle(2, 1)
+	obstacle.SetPosition(createdMap, 2, 1, 'O')
+
+	err := rover.Move(createdMap, "move_forward")
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward into obstacle")
+	}
+}
+
+func TestTryMoveRoverForwardIntoObstacleFromWest(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(2, 1, 'W')
+	rover.SetPosition(createdMap, 2, 1, 'W')
+
+	obstacle, _ := NewObstacle(1, 1)
+	obstacle.SetPosition(createdMap, 1, 1, 'O')
+
+	err := rover.Move(createdMap, "move_forward")
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward into obstacle")
+	}
+}
+
+func TestTryMoveRoverForwardIntoObstacleFromNorth(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 1, 'N')
+	rover.SetPosition(createdMap, 1, 1, 'N')
+
+	obstacle, _ := NewObstacle(1, 2)
+	obstacle.SetPosition(createdMap, 1, 2, 'O')
+
+	err := rover.Move(createdMap, "move_forward")
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward into obstacle")
+	}
+}
+
+func TestTryMoveRoverForwardIntoObstacleFromSouth(t *testing.T) {
+	createdMap, _ := MakeMap(2,2)
+	rover, _ := NewRover(1, 2, 'S')
+	rover.SetPosition(createdMap, 1, 2, 'S')
+
+	obstacle, _ := NewObstacle(1, 1)
+	obstacle.SetPosition(createdMap, 1, 1, 'O')
+
+	err := rover.Move(createdMap, "move_forward")
+	if err == nil {
+		t.Errorf("Should not be able to move rover forward into obstacle")
+	}
+}
 
 func TestCreateObstacleWithNegativeX(t *testing.T) {
 	_, err := NewObstacle(0, 1)
