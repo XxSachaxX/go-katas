@@ -709,7 +709,8 @@ func TestTryMoveRoverForwardIntoObstacleFromSouth(t *testing.T) {
 }
 
 func TestCreateObstacleWithNegativeX(t *testing.T) {
-	_, err := NewObstacle(0, 1)
+	obstacleConfig := ObstacleConfig{position: Position{x: -1, y: 1}}
+	_, err := NewObstacle(obstacleConfig)
 
 	if err == nil {
 		t.Errorf("Expected error, got nil")
@@ -717,7 +718,8 @@ func TestCreateObstacleWithNegativeX(t *testing.T) {
 }
 
 func TestCreateObstacleWithNegativeY(t *testing.T) {
-	_, err := NewObstacle(1, 0)
+	obstacleConfig := ObstacleConfig{position: Position{x: 1, y: -1}}
+	_, err := NewObstacle(obstacleConfig)
 
 	if err == nil {
 		t.Errorf("Expected error, got nil")

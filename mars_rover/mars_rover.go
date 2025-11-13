@@ -31,6 +31,10 @@ type Position struct {
 	SetPosition func(mapRows []string, x, y int, symbol rune) error
 }
 
+type ObstacleConfig struct {
+	position Position
+}
+
 type Obstacle struct {
 	position Position
 }
@@ -57,16 +61,13 @@ func (m *Map) SetRover(x, y int, direction rune) error {
 	return nil
 }
 
-func NewObstacle(x, y int) (*Obstacle, error) {
-	if x <= 0 || y <= 0 {
+func NewObstacle(obstacleConfig ObstacleConfig) (*Obstacle, error) {
+	if obstacleConfig.position.x <= 0 || obstacleConfig.position.y <= 0 {
 		return nil, errors.New("invalid coordinates")
 	}
 
 	return &Obstacle {
-		position: Position{
-			x: x,
-			y: y,
-		},
+		position: obstacleConfig.position,
 	}, nil
 }
 
@@ -269,7 +270,8 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 	rover, _ := NewRover(roverConfig)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
-		newObstacle, err := NewObstacle(obstacle.position.x, obstacle.position.y)
+		config := ObstacleConfig{position: obstacle.position}
+		newObstacle, err := NewObstacle(config)
 		if err != nil {
 			return nil, err
 		}
