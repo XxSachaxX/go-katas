@@ -6,41 +6,67 @@ import (
 )
 
 func TestMakeMapWithEqualWidthAndLength(t *testing.T) {
-	createdMap, err := MakeMap(2, 2)
-	expected := []string{"--", "--"}
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
+	expectedMapRows := []string{"N-", "-O"}
+
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected rows %v, got %v", expectedMapRows, createdMap.rows)
+	}
 
 	if err != nil {
-		t.Errorf("MakeMap(2, 2) returned error: %v", err)
+		t.Errorf("Error when creating map: %v", err)
 	}
 
 	if createdMap == nil {
-		t.Errorf("MakeMap(2, 2) returned empty slice")
+		t.Errorf("Map is empty")
 	}
 
-	if !reflect.DeepEqual(createdMap, expected) {
-		t.Errorf("MakeMap(2, 2) returned %v, expected %v", createdMap, expected)
-	}
-}
-
-func TestMakeMapWithUnequalWidthAndLength(t *testing.T) {
-	createdMap, err := MakeMap(3, 2)
-	expected := []string{"---", "---"}
-
-	if err != nil {
-		t.Errorf("MakeMap(3, 2) returned error: %v", err)
-	}
-
-	if createdMap == nil {
-		t.Errorf("MakeMap(3, 2) returned empty slice")
-	}
-
-	if !reflect.DeepEqual(createdMap, expected) {
-		t.Errorf("MakeMap(3, 2) returned %v, expected %v", createdMap, expected)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Map rows are not as expected: returned %v, expected %v", createdMap.rows, expectedMapRows)
 	}
 }
 
 func TestMakeMapWithZeroWidth(t *testing.T) {
-	_, err := MakeMap(0, 2)
+	mapConfig := MapConfig{
+		width:  0,
+		height: 2,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
 
 	if err == nil {
 		t.Errorf("Should not allow zero width")
@@ -48,7 +74,26 @@ func TestMakeMapWithZeroWidth(t *testing.T) {
 }
 
 func TestMakeMapWithNegativeWidth(t *testing.T) {
-	_, err := MakeMap(-1, 2)
+	mapConfig := MapConfig{
+		width:  -1,
+		height: 2,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
 
 	if err == nil {
 		t.Errorf("Should not allow negative width")
@@ -56,7 +101,27 @@ func TestMakeMapWithNegativeWidth(t *testing.T) {
 }
 
 func TestMakeMapWithZeroHeight(t *testing.T) {
-	_, err := MakeMap(2, 0)
+	mapConfig := MapConfig{
+		width:  2,
+		height: 0,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
 
 	if err == nil {
 		t.Errorf("Should not allow zero height")
@@ -64,7 +129,27 @@ func TestMakeMapWithZeroHeight(t *testing.T) {
 }
 
 func TestMakeMapWithNegativeHeight(t *testing.T) {
-	_, err := MakeMap(2, -1)
+	mapConfig := MapConfig{
+		width:  2,
+		height: -1,
+	}
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+	obstacle := Obstacle{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+	}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
 
 	if err == nil {
 		t.Errorf("Should not allow negative height")
@@ -97,46 +182,72 @@ func TestSetRoverOnMapWithValidCoordinates(t *testing.T) {
 	if !reflect.DeepEqual(createdMap.rows, expectedRows) {
 		t.Errorf("Expected rows %v, got %v", expectedRows, createdMap.rows)
 	}
-
 }
 
-func TestSetRoverPositionWithNegativeX(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(-1, 1, 'N')
-	err := rover.SetPosition(createdMap, -1, 1, 'N')
+func TestCreateRoverWithNegativeX(t *testing.T) {
+	_, err := NewRover(-1, 1, 'N')
+
 
 	if err == nil {
 		t.Errorf("Should not allow negative x position")
 	}
 }
 
-func TestSetRoverPositionWithNegativeY(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, -1, 'N')
-	err := rover.SetPosition(createdMap, 1, -1, 'N')
+func TestCreateRoverWithNegativeY(t *testing.T) {
+	_, err := NewRover(1, -1, 'N')
 
 	if err == nil {
 		t.Errorf("Should not allow negative y position")
 	}
 }
 
-func TestRoverPositionWithOutOfBoundsX(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.SetPosition(createdMap, 3, 1, 'N')
+func TestSetRoverOnMapWithOutOfBoundsX(t *testing.T) {
+	mapConfig := MapConfig{
+		width:  3,
+		height: 3,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 0,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
 
 	if err == nil {
 		t.Errorf("Should not allow x position out of bounds")
 	}
 }
 
-func TestRoverPositionWithOutOfBoundsY(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.SetPosition(createdMap, 1, 3, 'N')
+func TestSetRoverOnMapWithOutOfBoundsY(t *testing.T) {
+	mapConfig := MapConfig{
+		width:  3,
+		height: 3,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 0,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
 
 	if err == nil {
-		t.Errorf("Should not allow y position out of bounds")
+		t.Errorf("Should not allow x position out of bounds")
 	}
 }
 
@@ -148,178 +259,299 @@ func TestRoverCreationWithInvalidDirection(t *testing.T) {
 	}
 }
 
-func TestRoverPositionWithValidCoordinates(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.SetPosition(createdMap, 1, 1, 'N')
-	expectedMap := []string{"N-", "--"}
-
-	if err != nil {
-		t.Errorf("SetRoverPosition(1, 1) returned error: %v", err)
-	}
-
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
-	}
-}
-
-func TestRoverPositionWithOtherSetOfValidCoordinates(t *testing.T) {
-	createdMap, _ := MakeMap(10,5)
-	rover, _ := NewRover(5, 5, 'N')
-	err := rover.SetPosition(createdMap, 5, 5, 'N')
-	expectedMap := []string{"----------", "----------","----------","----------","----N-----"}
-
-	if err != nil {
-		t.Errorf("SetRoverPosition(5, 5) returned error: %v", err)
-	}
-
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
-	}
-}
-
 func TestMoveRoverWithInvalidCommand(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.Move(createdMap, "jump")
+	mapConfig := MapConfig{
+		width:  3,
+		height: 3,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("jump")
 
 	if err == nil {
 		t.Errorf("Expected error, invalid move")
 	}
 }
 
+
 func TestTurnRoverPointingNorthToTheLeft(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.Move(createdMap, "turn_left")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_left")
 
 	if err != nil {
 		t.Errorf("TurnRoverLeft() returned error: %v", err)
 	}
 
-	expectedMap := []string{"W-", "--"}
+	expectedMapRows := []string{"W-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingNorthToTheRight(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.Move(createdMap, "turn_right")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_right")
 
 	if err != nil {
 		t.Errorf("TurnRoverLeft() returned error: %v", err)
 	}
 
-	expectedMap := []string{"E-", "--"}
+	expectedMapRows := []string{"E-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingSouthToTheLeft(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'S')
-	err := rover.Move(createdMap, "turn_left")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_left")
 
 	if err != nil {
 		t.Errorf("TurnRoverLeft() returned error: %v", err)
 	}
 
-	expectedMap := []string{"E-", "--"}
+	expectedMapRows := []string{"E-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingSouthToTheRight(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'S')
-	err := rover.Move(createdMap, "turn_right")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_right")
 
 	if err != nil {
 		t.Errorf("TurnRoverRight() returned error: %v", err)
 	}
 
-	expectedMap := []string{"W-", "--"}
+	expectedMapRows := []string{"W-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingEastToTheLeft(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'E')
-	err := rover.Move(createdMap, "turn_left")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'E',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_left")
 
 	if err != nil {
 		t.Errorf("TurnRoverLeft() returned error: %v", err)
 	}
 
-	expectedMap := []string{"N-", "--"}
+	expectedMapRows := []string{"N-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingEastToTheRight(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'E')
-	err := rover.Move(createdMap, "turn_right")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'E',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_right")
 
 	if err != nil {
 		t.Errorf("TurnRoverRight() returned error: %v", err)
 	}
 
-	expectedMap := []string{"S-", "--"}
+	expectedMapRows := []string{"S-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingWestToTheLeft(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'W')
-	err := rover.Move(createdMap, "turn_left")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'W',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_left")
 
 	if err != nil {
 		t.Errorf("TurnRoverLeft() returned error: %v", err)
 	}
 
-	expectedMap := []string{"S-", "--"}
+	expectedMapRows := []string{"S-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTurnRoverPointingWestToTheRight(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'W')
-	err := rover.Move(createdMap, "turn_right")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'W',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("turn_right")
 
 	if err != nil {
 		t.Errorf("TurnRoverRight() returned error: %v", err)
 	}
 
-	expectedMap := []string{"N-", "--"}
+	expectedMapRows := []string{"N-", "--"}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
 
 func TestTryMoveRoverForwardOutOfMapOnXAxis(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'W')
-	err := rover.Move(createdMap, "move_forward")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'W',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
 
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward out of map")
@@ -327,9 +559,24 @@ func TestTryMoveRoverForwardOutOfMapOnXAxis(t *testing.T) {
 }
 
 func TestTryMoveRoverForwardOutOfMapOnYAxis(t *testing.T) {
-	createdMap, _ := MakeMap(2,1)
-	rover, _ := NewRover(1, 1, 'N')
-	err := rover.Move(createdMap, "move_forward")
+	mapConfig := MapConfig{
+		width:  2,
+		height: 1,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	obstacle := Obstacle{}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
 
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward out of map")
@@ -337,56 +584,100 @@ func TestTryMoveRoverForwardOutOfMapOnYAxis(t *testing.T) {
 }
 
 func TestTryMoveRoverForwardIntoObstacleFromEast(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'E')
-	rover.SetPosition(createdMap, 1, 1, 'E')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 1,
+	}
 
-	obstacle, _ := NewObstacle(2, 1)
-	obstacle.SetPosition(createdMap, 2, 1, 'O')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
 
-	err := rover.Move(createdMap, "move_forward")
+	obstacle := Obstacle{position: Position{x: 2, y: 1}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
+
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward into obstacle")
 	}
 }
 
 func TestTryMoveRoverForwardIntoObstacleFromWest(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(2, 1, 'W')
-	rover.SetPosition(createdMap, 2, 1, 'W')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
 
-	obstacle, _ := NewObstacle(1, 1)
-	obstacle.SetPosition(createdMap, 1, 1, 'O')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 2,
+			y: 1,
+		},
+		direction: 'W',
+	}
 
-	err := rover.Move(createdMap, "move_forward")
+	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
+
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward into obstacle")
 	}
 }
 
 func TestTryMoveRoverForwardIntoObstacleFromNorth(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 1, 'N')
-	rover.SetPosition(createdMap, 1, 1, 'N')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
 
-	obstacle, _ := NewObstacle(1, 2)
-	obstacle.SetPosition(createdMap, 1, 2, 'O')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'N',
+	}
 
-	err := rover.Move(createdMap, "move_forward")
+	obstacle := Obstacle{position: Position{x: 1, y: 2}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
+
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward into obstacle")
 	}
 }
 
 func TestTryMoveRoverForwardIntoObstacleFromSouth(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	rover, _ := NewRover(1, 2, 'S')
-	rover.SetPosition(createdMap, 1, 2, 'S')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
 
-	obstacle, _ := NewObstacle(1, 1)
-	obstacle.SetPosition(createdMap, 1, 1, 'O')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 2,
+		},
+		direction: 'S',
+	}
 
-	err := rover.Move(createdMap, "move_forward")
+	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+	err := createdMap.MoveRover("move_forward")
+
 	if err == nil {
 		t.Errorf("Should not be able to move rover forward into obstacle")
 	}
@@ -409,36 +700,80 @@ func TestCreateObstacleWithNegativeY(t *testing.T) {
 }
 
 func TestPositionObstacleOnMapWithOutOfBoundsX(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	obstacle, _ := NewObstacle(3, 1)
-	err := obstacle.SetPosition(createdMap, 3, 1, 'O')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{position: Position{x: 3, y: 1}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
 
 	if err == nil {
-		t.Errorf("SetObstaclePosition(3, 1) should return an error")
+		t.Errorf("out of bound x for obstacle should return an error")
 	}
 }
 
 func TestPositionObstacleOnMapWithOutOfBoundsY(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	obstacle, _ := NewObstacle(1, 3)
-	err := obstacle.SetPosition(createdMap, 1, 3, 'O')
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{position: Position{x: 1, y: 3}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
 
 	if err == nil {
-		t.Errorf("SetObstaclePosition(1, 3) should return an error")
+		t.Errorf("out of bound y for obstacle should return an error")
 	}
 }
 
 func TestPositionObstacleWithValidCoordinates(t *testing.T) {
-	createdMap, _ := MakeMap(2,2)
-	obstacle, _ := NewObstacle(1, 1)
-	err := obstacle.SetPosition(createdMap, 1, 1, 'O')
-	expectedMap := []string{"O-", "--"}
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
+
+	expectedMapRows := []string{"O-", "-S"}
 
 	if err != nil {
 		t.Errorf("SetObstaclePosition(1, 1) returned error: %v", err)
 	}
 
-	if !reflect.DeepEqual(createdMap, expectedMap) {
-		t.Errorf("Expected map %v, got %v", expectedMap, createdMap)
+	if !reflect.DeepEqual(createdMap.rows, expectedMapRows) {
+		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }

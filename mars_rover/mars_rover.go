@@ -70,6 +70,9 @@ type Rover struct {
 }
 
 func NewRover(x, y int, direction rune) (Rover, error) {
+	if x <= 0 || y <= 0 {
+		return Rover{}, errors.New("negative coordinates are not allowed")
+	}
 
 	if !isValidDirection(direction) {
 		return Rover{}, errors.New("invalid direction")
@@ -108,27 +111,27 @@ func (r *Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
 	return nil
 }
 
-func (r Rover) Move(mapRows []string, command string) error {
-	if !r.isValidCommand(command) {
+func (m *Map) MoveRover(command string) error {
+	if !m.rover.isValidCommand(command) {
 		return errors.New("invalid command")
 	}
 
 	if command == "turn_left" {
-		r.TurnLeft()
+		m.rover.TurnLeft()
 	}
 
 	if command == "turn_right" {
-		r.TurnRight()
+		m.rover.TurnRight()
 	}
 
 	if command == "move_forward" {
-		err := r.MoveForward(mapRows)
+		err := m.rover.MoveForward(m.rows)
 		if err != nil {
 			return err
 		}
 	}
 
-	r.SetPosition(mapRows, r.position.x, r.position.y, r.direction)
+	m.rover.SetPosition(m.rows, m.rover.position.x, m.rover.position.y, m.rover.direction)
 	return nil
 }
 
@@ -224,23 +227,6 @@ func (r *Rover) MoveForward(mapRows []string) error {
 	return nil
 }
 
-func MakeMap(width, height int) ([]string, error) {
-	if width <=0 {
-		return nil, errors.New("invalid width: cannot be zero or negative")
-	}
-
-	if height <=0 {
-		return nil, errors.New("invalid height: cannot be zero or negative")
-	}
-
-	mapRows := make([]string, height)
-	for i := range mapRows {
-		mapRows[i] = strings.Repeat("-", width)
-	}
-
-	return mapRows, nil
-}
-
 func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs ObstaclesConfigs) (*Map, error) {
 	width, height := mapConfig.width, mapConfig.height
 
@@ -257,6 +243,15 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		mapRows[i] = strings.Repeat("-", width)
 	}
 
+	if roverConfig.position.x > len(mapRows[0]) || roverConfig.position.y > len(mapRows) {
+		return &Map{}, errors.New("coordinates out of bounds")
+	}
+
+	if roverConfig.position.x <= 0 || roverConfig.position.y <= 0 {
+		return &Map{}, errors.New("coordinates out of bounds")
+	}
+
+
 	rover, _ := NewRover(roverConfig.position.x, roverConfig.position.y, roverConfig.direction)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
@@ -265,7 +260,13 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 
 	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
 	for _, obstacle := range obstacles {
-		obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, 'O')
+		if obstacle.position.x > len(mapRows[0]) || obstacle.position.y > len(mapRows) {
+			return &Map{}, errors.New("coordinates out of bounds")
+		}
+
+		if obstacle.position.x > 0 && obstacle.position.y > 0 {
+			obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, 'O')
+		}
 	}
 
 	return &Map{
