@@ -57,12 +57,12 @@ func (m *Map) SetRover(x, y int, direction rune) error {
 	return nil
 }
 
-func NewObstacle(x, y int) (Obstacle, error) {
+func NewObstacle(x, y int) (*Obstacle, error) {
 	if x <= 0 || y <= 0 {
-		return Obstacle{}, errors.New("invalid coordinates")
+		return nil, errors.New("invalid coordinates")
 	}
 
-	return Obstacle {
+	return &Obstacle {
 		position: Position{
 			x: x,
 			y: y,
