@@ -33,10 +33,12 @@ type Position struct {
 
 type ObstacleConfig struct {
 	position Position
+	symbol rune
 }
 
 type Obstacle struct {
 	position Position
+	symbol rune
 }
 
 type Rover struct {
@@ -68,6 +70,7 @@ func NewObstacle(obstacleConfig ObstacleConfig) (*Obstacle, error) {
 
 	return &Obstacle {
 		position: obstacleConfig.position,
+		symbol: obstacleConfig.symbol,
 	}, nil
 }
 
@@ -78,7 +81,7 @@ func (obstacle *Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) e
 
 	row := mapRows[y - 1]
 	runes := []rune(row)
-	runes[x - 1] = symbol
+	runes[x - 1] = obstacle.symbol
 	mapRows[y - 1] = string(runes)
 
 	return nil
@@ -270,7 +273,7 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 	rover, _ := NewRover(roverConfig)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
-		config := ObstacleConfig{position: obstacle.position}
+		config := ObstacleConfig{position: obstacle.position, symbol: obstacle.symbol}
 		newObstacle, err := NewObstacle(config)
 		if err != nil {
 			return nil, err
@@ -285,7 +288,7 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		}
 
 		if obstacle.position.x > 0 && obstacle.position.y > 0 {
-			obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, 'O')
+			obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, obstacle.symbol)
 		}
 	}
 

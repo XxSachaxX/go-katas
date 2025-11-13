@@ -22,6 +22,7 @@ func TestMakeMapWithEqualWidthAndLength(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -63,6 +64,7 @@ func TestMakeMapWithZeroWidth(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -90,6 +92,7 @@ func TestMakeMapWithNegativeWidth(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -117,6 +120,7 @@ func TestMakeMapWithZeroHeight(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -145,6 +149,7 @@ func TestMakeMapWithNegativeHeight(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -173,6 +178,7 @@ func TestSetRoverOnMapWithValidCoordinates(t *testing.T) {
 			x: 2,
 			y: 2,
 		},
+		symbol: 'O',
 	}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
@@ -232,7 +238,7 @@ func TestSetRoverOnMapWithOutOfBoundsX(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -257,7 +263,7 @@ func TestSetRoverOnMapWithOutOfBoundsY(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -298,7 +304,7 @@ func TestMoveRoverWithInvalidCommand(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -324,7 +330,7 @@ func TestTurnRoverPointingNorthToTheLeft(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -355,7 +361,7 @@ func TestTurnRoverPointingNorthToTheRight(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -386,7 +392,7 @@ func TestTurnRoverPointingSouthToTheLeft(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -417,7 +423,7 @@ func TestTurnRoverPointingSouthToTheRight(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -448,7 +454,7 @@ func TestTurnRoverPointingEastToTheLeft(t *testing.T) {
 		direction: 'E',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -479,7 +485,7 @@ func TestTurnRoverPointingEastToTheRight(t *testing.T) {
 		direction: 'E',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -510,7 +516,7 @@ func TestTurnRoverPointingWestToTheLeft(t *testing.T) {
 		direction: 'W',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -541,7 +547,7 @@ func TestTurnRoverPointingWestToTheRight(t *testing.T) {
 		direction: 'W',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -572,7 +578,7 @@ func TestTryMoveRoverForwardOutOfMapOnXAxis(t *testing.T) {
 		direction: 'W',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 2}}
+	obstacle := Obstacle{position: Position{x: 2, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -597,7 +603,7 @@ func TestTryMoveRoverForwardOutOfMapOnYAxis(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 1}}
+	obstacle := Obstacle{position: Position{x: 2, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -622,7 +628,7 @@ func TestTryMoveRoverForwardIntoObstacleFromEast(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 2, y: 1}}
+	obstacle := Obstacle{position: Position{x: 2, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -647,7 +653,7 @@ func TestTryMoveRoverForwardIntoObstacleFromWest(t *testing.T) {
 		direction: 'W',
 	}
 
-	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstacle := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -672,7 +678,7 @@ func TestTryMoveRoverForwardIntoObstacleFromNorth(t *testing.T) {
 		direction: 'N',
 	}
 
-	obstacle := Obstacle{position: Position{x: 1, y: 2}}
+	obstacle := Obstacle{position: Position{x: 1, y: 2}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -697,7 +703,7 @@ func TestTryMoveRoverForwardIntoObstacleFromSouth(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstacle := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -709,7 +715,7 @@ func TestTryMoveRoverForwardIntoObstacleFromSouth(t *testing.T) {
 }
 
 func TestCreateObstacleWithNegativeX(t *testing.T) {
-	obstacleConfig := ObstacleConfig{position: Position{x: -1, y: 1}}
+	obstacleConfig := ObstacleConfig{position: Position{x: -1, y: 1}, symbol: 'O'}
 	_, err := NewObstacle(obstacleConfig)
 
 	if err == nil {
@@ -718,7 +724,7 @@ func TestCreateObstacleWithNegativeX(t *testing.T) {
 }
 
 func TestCreateObstacleWithNegativeY(t *testing.T) {
-	obstacleConfig := ObstacleConfig{position: Position{x: 1, y: -1}}
+	obstacleConfig := ObstacleConfig{position: Position{x: 1, y: -1}, symbol: 'O'}
 	_, err := NewObstacle(obstacleConfig)
 
 	if err == nil {
@@ -740,7 +746,7 @@ func TestPositionObstacleOnMapWithOutOfBoundsX(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 3, y: 1}}
+	obstacle := Obstacle{position: Position{x: 3, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -764,7 +770,7 @@ func TestPositionObstacleOnMapWithOutOfBoundsY(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 1, y: 3}}
+	obstacle := Obstacle{position: Position{x: 1, y: 3}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
@@ -788,7 +794,7 @@ func TestPositionObstacleWithValidCoordinates(t *testing.T) {
 		direction: 'S',
 	}
 
-	obstacle := Obstacle{position: Position{x: 1, y: 1}}
+	obstacle := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
 	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
 
 	createdMap, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
