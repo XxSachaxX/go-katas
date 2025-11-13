@@ -107,7 +107,7 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 
 	return &Map{
 		rows: mapRows,
-		rover: &rover,
+		rover: rover,
 		obstacles: obstacles,
 	}, nil
 }

@@ -7,16 +7,16 @@ type Rover struct {
 	direction rune
 }
 
-func NewRover(roverConfig *RoverConfig) (Rover, error) {
+func NewRover(roverConfig *RoverConfig) (*Rover, error) {
 	if roverConfig.position.x <= 0 || roverConfig.position.y <= 0 {
-		return Rover{}, errors.New("negative coordinates are not allowed")
+		return nil, errors.New("negative coordinates are not allowed")
 	}
 
 	if !isValidDirection(roverConfig.direction) {
-		return Rover{}, errors.New("invalid direction")
+		return nil, errors.New("invalid direction")
 	}
 
-	return Rover {
+	return &Rover {
 		position: Position{
 			x: roverConfig.position.x,
 			y: roverConfig.position.y,
