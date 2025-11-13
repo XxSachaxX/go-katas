@@ -76,16 +76,16 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		mapRows[i] = strings.Repeat("-", width)
 	}
 
-	if roverConfig.position.x > len(mapRows[0]) || roverConfig.position.y > len(mapRows) {
+	if !roverConfig.isValidPosition(mapRows) {
 		return nil, errors.New("coordinates out of bounds")
 	}
 
-	if roverConfig.position.x <= 0 || roverConfig.position.y <= 0 {
-		return nil, errors.New("coordinates out of bounds")
+	rover, roverErr := NewRover(roverConfig)
+	if roverErr != nil {
+		return nil, roverErr
 	}
+	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
 
-
-	rover, _ := NewRover(roverConfig)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
 		config := ObstacleConfig{position: obstacle.position, symbol: obstacle.symbol}
@@ -96,7 +96,6 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		obstacles[i] = newObstacle
 	}
 
-	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
 	for _, obstacle := range obstacles {
 		if obstacle.position.x > len(mapRows[0]) || obstacle.position.y > len(mapRows) {
 			return nil, errors.New("coordinates out of bounds")
@@ -112,4 +111,16 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		rover: &rover,
 		obstacles: obstacles,
 	}, nil
+}
+
+func (rc *RoverConfig) isValidPosition(mapRows []string) bool {
+	if rc.position.x > len(mapRows[0]) || rc.position.y > len(mapRows) {
+		return false
+	}
+
+	if rc.position.x <= 0 || rc.position.y <= 0 {
+		return false
+	}
+
+	return true
 }
