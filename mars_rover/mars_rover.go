@@ -258,24 +258,28 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 	}
 
 	if roverConfig.position.x > len(mapRows[0]) || roverConfig.position.y > len(mapRows) {
-		return &Map{}, errors.New("coordinates out of bounds")
+		return nil, errors.New("coordinates out of bounds")
 	}
 
 	if roverConfig.position.x <= 0 || roverConfig.position.y <= 0 {
-		return &Map{}, errors.New("coordinates out of bounds")
+		return nil, errors.New("coordinates out of bounds")
 	}
 
 
 	rover, _ := NewRover(roverConfig)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
-		obstacles[i] = &Obstacle{position: Position{x: obstacle.position.x, y: obstacle.position.y}}
+		newObstacle, err := NewObstacle(obstacle.position.x, obstacle.position.y)
+		if err != nil {
+			return nil, err
+		}
+		obstacles[i] = newObstacle
 	}
 
 	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
 	for _, obstacle := range obstacles {
 		if obstacle.position.x > len(mapRows[0]) || obstacle.position.y > len(mapRows) {
-			return &Map{}, errors.New("coordinates out of bounds")
+			return nil, errors.New("coordinates out of bounds")
 		}
 
 		if obstacle.position.x > 0 && obstacle.position.y > 0 {
