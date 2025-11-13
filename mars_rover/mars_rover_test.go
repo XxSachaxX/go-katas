@@ -185,7 +185,15 @@ func TestSetRoverOnMapWithValidCoordinates(t *testing.T) {
 }
 
 func TestCreateRoverWithNegativeX(t *testing.T) {
-	_, err := NewRover(-1, 1, 'N')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: -1,
+			y: 1,
+		},
+		direction: 'N',
+	}
+
+	_, err := NewRover(&roverConfig)
 
 
 	if err == nil {
@@ -194,7 +202,16 @@ func TestCreateRoverWithNegativeX(t *testing.T) {
 }
 
 func TestCreateRoverWithNegativeY(t *testing.T) {
-	_, err := NewRover(1, -1, 'N')
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: -1,
+		},
+		direction: 'N',
+	}
+
+	_, err := NewRover(&roverConfig)
 
 	if err == nil {
 		t.Errorf("Should not allow negative y position")
@@ -252,7 +269,15 @@ func TestSetRoverOnMapWithOutOfBoundsY(t *testing.T) {
 }
 
 func TestRoverCreationWithInvalidDirection(t *testing.T) {
-	_, err := NewRover(1, 1, 'X')
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 1,
+			y: 1,
+		},
+		direction: 'X',
+	}
+
+	_, err := NewRover(&roverConfig)
 
 	if err == nil {
 		t.Errorf("Should not allow invalid direction")

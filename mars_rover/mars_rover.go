@@ -11,6 +11,35 @@ type Map struct {
 	obstacles []*Obstacle
 }
 
+type MapConfig struct {
+	width int
+	height int
+}
+
+type RoverConfig struct {
+	position Position
+	direction rune
+}
+
+type ObstaclesConfigs struct {
+	obstacles []Obstacle
+}
+
+type Position struct {
+	x int
+	y int
+	SetPosition func(mapRows []string, x, y int, symbol rune) error
+}
+
+type Obstacle struct {
+	position Position
+}
+
+type Rover struct {
+	position Position
+	direction rune
+}
+
 func (m *Map) SetRover(x, y int, direction rune) error {
 	if x <= 0 || y <= 0 {
 		return errors.New("negative coordinates are not allowed")
@@ -26,16 +55,6 @@ func (m *Map) SetRover(x, y int, direction rune) error {
 	m.rows[y - 1] = string(runes)
 
 	return nil
-}
-
-type Position struct {
-	x int
-	y int
-	SetPosition func(mapRows []string, x, y int, symbol rune) error
-}
-
-type Obstacle struct {
-	position Position
 }
 
 func NewObstacle(x, y int) (Obstacle, error) {
@@ -64,26 +83,21 @@ func (obstacle *Obstacle) SetPosition(mapRows []string, x, y int, symbol rune) e
 	return nil
 }
 
-type Rover struct {
-	position Position
-	direction rune
-}
-
-func NewRover(x, y int, direction rune) (Rover, error) {
-	if x <= 0 || y <= 0 {
+func NewRover(roverConfig *RoverConfig) (Rover, error) {
+	if roverConfig.position.x <= 0 || roverConfig.position.y <= 0 {
 		return Rover{}, errors.New("negative coordinates are not allowed")
 	}
 
-	if !isValidDirection(direction) {
+	if !isValidDirection(roverConfig.direction) {
 		return Rover{}, errors.New("invalid direction")
 	}
 
 	return Rover {
 		position: Position{
-			x: x,
-			y: y,
+			x: roverConfig.position.x,
+			y: roverConfig.position.y,
 		},
-		direction: direction,
+		direction: roverConfig.direction,
 	}, nil
 }
 
@@ -252,7 +266,7 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 	}
 
 
-	rover, _ := NewRover(roverConfig.position.x, roverConfig.position.y, roverConfig.direction)
+	rover, _ := NewRover(roverConfig)
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
 	for i, obstacle := range obstacleConfigs.obstacles {
 		obstacles[i] = &Obstacle{position: Position{x: obstacle.position.x, y: obstacle.position.y}}
@@ -274,18 +288,4 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 		rover: &rover,
 		obstacles: obstacles,
 	}, nil
-}
-
-type MapConfig struct {
-	width int
-	height int
-}
-
-type RoverConfig struct {
-	position Position
-	direction rune
-}
-
-type ObstaclesConfigs struct {
-	obstacles []Obstacle
 }
