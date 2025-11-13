@@ -810,3 +810,6 @@ func TestPositionObstacleWithValidCoordinates(t *testing.T) {
 		t.Errorf("Expected map %v, got %v", expectedMapRows, createdMap.rows)
 	}
 }
+
+// To test:
+// - two obstacles with the same position should either not be allowed or fail for second attempt
