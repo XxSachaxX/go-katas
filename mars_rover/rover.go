@@ -32,19 +32,19 @@ func isValidDirection(direction rune) bool {
 	return false
 }
 
-func (r *Rover) SetPosition(mapRows []string, x, y int, direction rune) error {
-	if x <= 0 || y <= 0 {
+func (r *Rover) SetPosition(mapRows []string, position Position, direction rune) error {
+	if position.x <= 0 || position.y <= 0 {
 		return errors.New("negative coordinates are not allowed")
 	}
 
-	if x > len(mapRows[0]) || y > len(mapRows) {
+	if position.x > len(mapRows[0]) || position.y > len(mapRows) {
 		return errors.New("coordinates out of bounds")
 	}
 
-	row := mapRows[y - 1]
+	row := mapRows[position.y - 1]
 	runes := []rune(row)
-	runes[x - 1] = direction
-	mapRows[y - 1] = string(runes)
+	runes[position.x - 1] = direction
+	mapRows[position.y - 1] = string(runes)
 
 	return nil
 }
