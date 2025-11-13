@@ -811,5 +811,27 @@ func TestPositionObstacleWithValidCoordinates(t *testing.T) {
 	}
 }
 
-// To test:
-// - two obstacles with the same position should either not be allowed or fail for second attempt
+func TestCreatingMapWithTwoObstaclesWithSamePosition(t *testing.T) {
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+		direction: 'S',
+	}
+
+	obstacle1 := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
+	obstacle2 := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle1, obstacle2}}
+
+	_, err := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
+	if err == nil {
+		t.Errorf("two obstacles with the same position should either not be allowed or fail for second attempt")
+	}
+}

@@ -96,6 +96,10 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 			return nil, errors.New("coordinates out of bounds")
 		}
 
+		if mapRows[obstacle.position.y - 1][obstacle.position.x - 1] != '-' {
+			return nil, errors.New("obstacle already exists at position")
+		}
+
 		if obstacle.position.x > 0 && obstacle.position.y > 0 {
 			obstacle.SetPosition(mapRows, obstacle.position.x, obstacle.position.y, obstacle.symbol)
 		}
@@ -122,6 +126,7 @@ func (rc *RoverConfig) isValidPosition(mapRows []string) bool {
 
 func createObstacles(obstacleConfigs ObstaclesConfigs) ([]*Obstacle, error) {
 	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
+
 	for i, obstacle := range obstacleConfigs.obstacles {
 		config := ObstacleConfig{position: obstacle.position, symbol: obstacle.symbol}
 		newObstacle, err := NewObstacle(config)
