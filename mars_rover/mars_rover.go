@@ -86,14 +86,9 @@ func CreateMap(mapConfig *MapConfig, roverConfig *RoverConfig, obstacleConfigs O
 	}
 	rover.SetPosition(mapRows, rover.position.x, rover.position.y, rover.direction)
 
-	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
-	for i, obstacle := range obstacleConfigs.obstacles {
-		config := ObstacleConfig{position: obstacle.position, symbol: obstacle.symbol}
-		newObstacle, err := NewObstacle(config)
-		if err != nil {
-			return nil, err
-		}
-		obstacles[i] = newObstacle
+	obstacles, obstaclesErr := createObstacles(obstacleConfigs)
+	if obstaclesErr != nil {
+		return nil, obstaclesErr
 	}
 
 	for _, obstacle := range obstacles {
@@ -123,4 +118,18 @@ func (rc *RoverConfig) isValidPosition(mapRows []string) bool {
 	}
 
 	return true
+}
+
+func createObstacles(obstacleConfigs ObstaclesConfigs) ([]*Obstacle, error) {
+	obstacles := make([]*Obstacle, len(obstacleConfigs.obstacles))
+	for i, obstacle := range obstacleConfigs.obstacles {
+		config := ObstacleConfig{position: obstacle.position, symbol: obstacle.symbol}
+		newObstacle, err := NewObstacle(config)
+		if err != nil {
+			return nil, err
+		}
+		obstacles[i] = newObstacle
+	}
+
+	return obstacles, nil
 }
