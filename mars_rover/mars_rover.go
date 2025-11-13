@@ -1,4 +1,4 @@
-package mars_rover
+package main
 
 import (
 	"errors"
@@ -139,4 +139,14 @@ func createObstacles(obstacleConfigs ObstaclesConfigs) ([]*Obstacle, error) {
 	}
 
 	return obstacles, nil
+}
+
+func (m *Map) Representation() string {
+	var builder strings.Builder
+
+	for _, row := range m.rows {
+		builder.WriteString(row + "\n")
+	}
+
+	return builder.String()
 }

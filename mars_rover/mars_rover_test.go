@@ -1,4 +1,4 @@
-package mars_rover
+package main
 
 import (
 	"reflect"
@@ -833,5 +833,32 @@ func TestCreatingMapWithTwoObstaclesWithSamePosition(t *testing.T) {
 
 	if err == nil {
 		t.Errorf("two obstacles with the same position should either not be allowed or fail for second attempt")
+	}
+}
+
+func TestMapRepresentation(t *testing.T) {
+	mapConfig := MapConfig{
+		width:  2,
+		height: 2,
+	}
+
+	roverConfig := RoverConfig{
+		position: Position{
+			x: 2,
+			y: 2,
+		},
+		direction: 'S',
+	}
+
+	obstacle := Obstacle{position: Position{x: 1, y: 1}, symbol: 'O'}
+	obstaclesConfigs := ObstaclesConfigs{obstacles: []Obstacle{obstacle}}
+
+	createdMap, _ := CreateMap(&mapConfig, &roverConfig, obstaclesConfigs)
+
+	expectedMapRepr := "O-\n-S\n"
+	actualMapRepr := createdMap.Representation()
+
+	if expectedMapRepr != actualMapRepr {
+		t.Errorf("Expected map %v, got %v", expectedMapRepr, actualMapRepr)
 	}
 }
